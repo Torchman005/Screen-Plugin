@@ -1,0 +1,12 @@
+{
+  "captureMaxWidth": 1280,
+  "returnImage": false,
+  "vision": {
+    "apiKey": "",
+    "baseUrl": "https://api.openai.com/v1",
+    "model": "",
+    "proxy": "",
+    "maxTokens": 420,
+    "timeoutSeconds": 45
+  }
+}

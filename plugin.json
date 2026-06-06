@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "yuyu.plugin.v1",
+  "name": "screen",
+  "displayName": "Screen Observer",
+  "description": "Capture the desktop screen and optionally summarize it with a configured vision model.",
+  "version": "0.1.0",
+  "author": "Yuyu-Mind",
+  "enabled": true,
+  "entry": "main.py",
+  "permissions": [
+    "screen.capture",
+    "network.vision"
+  ],
+  "context": {
+    "modes": {
+      "chat": {
+        "enabled": true,
+        "action": "observe",
+        "priority": 20,
+        "prompt": "Use the current screen to answer the user's message.",
+        "triggers": [
+          "屏幕",
+          "读屏",
+          "看屏",
+          "看一下屏幕",
+          "看下屏幕",
+          "截图",
+          "画面",
+          "当前界面",
+          "这个界面",
+          "screen",
+          "screenshot",
+          "what do you see",
+          "look at this"
+        ],
+        "demonstratives": [
+          "这个",
+          "这里",
+          "上面",
+          "下面",
+          "当前",
+          "现在这个",
+          "这段",
+          "this"
+        ],
+        "targets": [
+          "报错",
+          "错误",
+          "弹窗",
+          "窗口",
+          "页面",
+          "按钮",
+          "代码",
+          "日志",
+          "界面",
+          "配置",
+          "error",
+          "window",
+          "page",
+          "button",
+          "code",
+          "log"
+        ]
+      },
+      "proactive": {
+        "enabled": true,
+        "action": "observe",
+        "priority": 40,
+        "chancePercent": 20,
+        "prompt": "Make a brief, low-interruption desktop companion comment about the visible screen."
+      }
+    }
+  },
+  "defaultConfig": {
+    "captureMaxWidth": 1280,
+    "returnImage": false,
+    "vision": {
+      "apiKey": "",
+      "baseUrl": "https://api.openai.com/v1",
+      "model": "",
+      "proxy": "",
+      "maxTokens": 420,
+      "timeoutSeconds": 45
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "captureMaxWidth": {
+        "type": "integer",
+        "minimum": 320,
+        "maximum": 4096,
+        "description": "Maximum screenshot width before sending it to the vision model."
+      },
+      "returnImage": {
+        "type": "boolean",
+        "description": "Whether plugin responses may include screenshot image data."
+      },
+      "vision": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "secret": true,
+            "description": "Vision API key. Empty means fallback to YUYU_SCREEN_VISION_API_KEY, MOCHI_SCREEN_VISION_API_KEY, or OPENAI_API_KEY."
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "OpenAI-compatible chat completions base URL."
+          },
+          "model": {
+            "type": "string",
+            "description": "Vision model name."
+          },
+          "proxy": {
+            "type": "string",
+            "description": "Optional HTTP/HTTPS proxy for the vision API, for example http://127.0.0.1:7890."
+          },
+          "maxTokens": {
+            "type": "integer",
+            "minimum": 64,
+            "maximum": 2048
+          },
+          "timeoutSeconds": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 180
+          }
+        }
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "observe",
+      "description": "Capture the current desktop screen and return a concise observation.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Optional observation prompt."
+          },
+          "includeImage": {
+            "type": "boolean",
+            "description": "Whether to include the captured PNG as base64 in the plugin response."
+          },
+          "maxWidth": {
+            "type": "integer",
+            "description": "Maximum screenshot width before sending it to the vision model."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "vision": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "ok",
+          "summary"
+        ]
+      }
+    }
+  ]
+}

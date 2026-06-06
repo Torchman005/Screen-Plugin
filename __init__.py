@@ -1,0 +1,1 @@
+"""Screen observation plugin package."""
